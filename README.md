@@ -1,34 +1,59 @@
-# 🚇 Metro de Santiago de Chile
+# Grafo del Metro de Santiago de Chile
 
-![Metro de Santiago](https://upload.wikimedia.org/wikipedia/commons/0/08/Mapa_Metro_de_Santiago.png)
+Este proyecto consiste en la construcción de un grafo que representa las estaciones del metro de Santiago de Chile, con el objetivo de encontrar la ruta más corta entre dos estaciones basándose en la distancia. Utiliza un algoritmo de Dijkstra para calcular el mejor camino y lo grafica en un mapa a partir de las coordenadas geográficas.
 
-Este proyecto modela las líneas del **Metro de Santiago** utilizando visualización de datos geoespaciales y análisis de redes. A través de gráficos y mapas interactivos, es posible visualizar y explorar las rutas y conexiones entre estaciones del metro de manera intuitiva.
+## Descripción
 
-## ✨ Características
+El programa procesa una plantilla de Excel que contiene la información de las estaciones del metro de Santiago, incluyendo:
 
-- 🌍 **Visualización de mapas**: Uso de herramientas como `folium` para generar mapas interactivos que muestran las líneas del metro.
-- 📊 **Modelado de redes**: Utiliza `networkx` para crear un grafo que representa las estaciones como nodos y las conexiones como aristas.
-- 🎨 **Coloración por líneas**: Cada línea del metro está representada por su color correspondiente.
-- 🛤️ **Análisis de rutas**: Permite analizar rutas entre estaciones y realizar estudios sobre la red del metro.
+- Estación de origen
+- Estación de destino
+- Color de la línea
+- Número de línea
+- Longitud de la estación (en metros)
+- Coordenadas geográficas (latitud y longitud)
 
-## 📸 Capturas
+### Ejemplo de datos:
 
-![Mapa Interactivo](https://via.placeholder.com/600x300.png?text=Mapa+Interactivo)
-*Ejemplo de visualización de las líneas del metro en un mapa interactivo*
+| Estación Origen  | Estación Destino  | Color | Línea | Longitud de Estación | Lat Origen | Long Origen | Lat Destino | Long Destino |
+|------------------|-------------------|-------|-------|----------------------|------------|-------------|-------------|--------------|
+| San Pablo        | Neptuno           | Rojo  | 1     | 690                  | -33.445367 | -70.723160  | -33.451554  | -70.722668   |
+| Neptuno          | Pajaritos         | Rojo  | 1     | 1030                 | -33.451554 | -70.722668  | -33.456570  | -70.715493   |
 
-![Grafo de Estaciones](https://via.placeholder.com/600x300.png?text=Grafo+de+Estaciones)
-*Visualización del grafo de estaciones y conexiones del metro*
+## Funcionalidad
 
-## 🛠️ Tecnologías Utilizadas
+1. **Cálculo del camino más corto**: Usando el algoritmo de Dijkstra, se calcula la ruta más corta entre una estación de origen y una de destino. 
+   - Ejemplo: Ruta desde `Santiago Bueras` hasta `Plaza Egaña`:
+     ```python
+     source = 'Santiago Bueras'
+     target = 'Plaza Egaña'
+     djk_path = nx.dijkstra_path(METRO, source=source, target=target, weight=True)
+     print(djk_path)
+     ```
 
-- **Python**: Lenguaje de programación utilizado para la manipulación de datos y visualización.
-- **Pandas y NumPy**: Para el manejo y análisis de los datos.
-- **NetworkX**: Para modelar las estaciones del metro como un grafo de nodos y aristas.
-- **Folium**: Para la creación de mapas interactivos y visualización de datos geográficos.
+     Resultado:
+     ```
+     ['Santiago Bueras', 'Del Sol', 'Monte Tabor', ... , 'Plaza Egaña']
+     ```
 
-## 🚀 Instalación
+2. **Visualización**: El grafo generado se visualiza en un mapa utilizando las coordenadas geográficas de cada estación.
 
-Sigue estos pasos para ejecutar el proyecto localmente:
+3. **Implementación web**: El grafo se ha integrado en una página web mediante HTML, CSS y JavaScript para que los usuarios puedan interactuar con él en tiempo real.
+
+## Tecnologías utilizadas
+
+- **Python**: Para el procesamiento de datos y la implementación del algoritmo de Dijkstra.
+- **NetworkX**: Librería utilizada para la creación y manipulación del grafo.
+- **Matplotlib**: Para la visualización gráfica del grafo.
+- **HTML/CSS/JavaScript**: Implementación de una interfaz web para visualizar y manipular el grafo.
+- **Excel**: Archivo de entrada con los datos de las estaciones del metro.
+
+## Uso
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/skantos/metro-de-santiago-de-chile
+
 
 1. Clona el repositorio:
    ```bash
