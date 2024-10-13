@@ -1,6 +1,6 @@
 # 🚇 Metro de Santiago de Chile
 
-![Metro de Santiago]([https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Logo_MetrodeSantiago.svg/2560px-Logo_MetrodeSantiago.svg.png](https://es.wikipedia.org/wiki/Archivo:Mapa_Metro_de_Santiago.png))
+![Metro de Santiago](https://upload.wikimedia.org/wikipedia/commons/0/08/Mapa_Metro_de_Santiago.png)
 
 Este proyecto modela las líneas del **Metro de Santiago** utilizando visualización de datos geoespaciales y análisis de redes. A través de gráficos y mapas interactivos, es posible visualizar y explorar las rutas y conexiones entre estaciones del metro de manera intuitiva.
 
@@ -28,9 +28,9 @@ Este proyecto modela las líneas del **Metro de Santiago** utilizando visualizac
 
 ## 🚀 Instalación
 
-*Sigue estos pasos para ejecutar el proyecto localmente:
+Sigue estos pasos para ejecutar el proyecto localmente:
 
-*pip install -r requirements.txt
-*jupyter notebook metro.ipynb
-
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/skantos/metro-de-santiago-de-chile.git
 
