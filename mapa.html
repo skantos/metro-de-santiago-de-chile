@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+
+    <link rel="stylesheet" href="style.css">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     
@@ -48,6 +50,7 @@
     <div id="routeForm">
         <label for="origin">Punto de Origen:</label>
         <input type="text" id="origin" name="origin" placeholder="Estación de origen">
+        <select name="station" id="station"></select>
         
         <label for="destination">Punto de Destino:</label>
         <input type="text" id="destination" name="destination" placeholder="Estación de destino">
@@ -76,7 +79,7 @@
         "San Alberto Hurtado": [-33.4539993398527, -70.6926543147172],
         "Estación Central": [-33.4514683517996, -70.6792284109338],
         "Universidad de Santiago": [-33.453301222998, -70.6860849677976],
-        "Estación Unión Latinoamericana (ULA)": [-33.4498717896073, -70.674315028617],
+        "ULA": [-33.4498717896073, -70.674315028617],
         "República": [-33.4472269081007, -70.666001061673],
         "Los Héroes": [-33.4463396701923, -70.6619853169274],
         "La Moneda": [-33.4443424809888, -70.6543551034262],
@@ -218,42 +221,270 @@
         "Inés de Suárez": [-33.4388304735347, -70.6072168450684],
         "Los Leones": [-33.4209649672706, -70.6072690066988],
         };
+
+        const conexiones = [
+            // Estaciones de la Línea 1 del Metro de Santiago
+            { origen: 'San Pablo', destino: 'Neptuno' },
+            { origen: 'Neptuno', destino: 'Pajaritos' },
+            { origen: 'Pajaritos', destino: 'Las Rejas' },
+            { origen: 'Las Rejas', destino: 'Ecuador' },
+            { origen: 'Ecuador', destino: 'San Alberto Hurtado' },
+            { origen: 'San Alberto Hurtado', destino: 'Universidad de Santiago' },
+            { origen: 'Universidad de Santiago', destino: 'Estación Central' },
+            { origen: 'Estación Central', destino: 'ULA' },
+            { origen: 'ULA', destino: 'República' },
+            { origen: 'República', destino: 'Los Héroes' },
+            { origen: 'Los Héroes', destino: 'La Moneda' },
+            { origen: 'La Moneda', destino: 'Universidad de Chile' },
+            { origen: 'Universidad de Chile', destino: 'Santa Lucía' },
+            { origen: 'Santa Lucía', destino: 'Universidad Católica' },
+            { origen: 'Universidad Católica', destino: 'Baquedano' },
+            { origen: 'Baquedano', destino: 'Salvador' },
+            { origen: 'Salvador', destino: 'Manuel Montt' },
+            { origen: 'Manuel Montt', destino: 'Pedro de Valdivia' },
+            { origen: 'Pedro de Valdivia', destino: 'Los Leones' },
+            { origen: 'Los Leones', destino: 'Tobalaba' },
+            { origen: 'Tobalaba', destino: 'El Golf' },
+            { origen: 'El Golf', destino: 'Alcántara' },
+            { origen: 'Alcántara', destino: 'Escuela Militar' },
+            { origen: 'Escuela Militar', destino: 'Manquehue' },
+            { origen: 'Manquehue', destino: 'Hernando de Magallanes' },
+            { origen: 'Hernando de Magallanes', destino: 'Los Dominicos' },
+            // Estaciones de la Línea 2 del Metro de Santiago
+            { origen: 'Vespucio Norte', destino: 'Zapadores' },
+            { origen: 'Zapadores', destino: 'Dorsal' },
+            { origen: 'Dorsal', destino: 'Einstein' },
+            { origen: 'Einstein', destino: 'Cementerios' },
+            { origen: 'Cementerios', destino: 'Cerro Blanco' },
+            { origen: 'Cerro Blanco', destino: 'Patronato' },
+            { origen: 'Patronato', destino: 'Puente Cal y Canto' },
+            { origen: 'Puente Cal y Canto', destino: 'Santa Ana' },
+            { origen: 'Santa Ana', destino: 'Los Héroes' },
+            { origen: 'Los Héroes', destino: 'Toesca' },
+            { origen: 'Toesca', destino: "Parque O'Higgins" },
+            { origen: "Parque O'Higgins", destino: 'Rondizzoni' },
+            { origen: 'Rondizzoni', destino: 'Franklin' },
+            { origen: 'Franklin', destino: 'El Llano' },
+            { origen: 'El Llano', destino: 'San Miguel' },
+            { origen: 'San Miguel', destino: 'Lo Vial' },
+            { origen: 'Lo Vial', destino: 'Departamental' },
+            { origen: 'Departamental', destino: 'Ciudad del Niño' },
+            { origen: 'Ciudad del Niño', destino: 'Lo Ovalle' },
+            { origen: 'Lo Ovalle', destino: 'El Parrón' },
+            { origen: 'El Parrón', destino: 'La Cisterna' },
+            { origen: 'La Cisterna', destino: 'Riquelme (El Bosque)' },
+            { origen: 'Riquelme (El Bosque)', destino: 'Observatorio' },
+            { origen: 'Observatorio', destino: 'Lo Martínez' },
+            { origen: 'Lo Martínez', destino: 'Hospital El Pino' },
+            // Estaciondes de la Línea 3 del Metro de Santiago
+            { origen: 'Plaza De Qulicura', destino: 'Lo Cruzat' },
+            { origen: 'Lo Cruzat', destino: 'EFE Quilicura (Ferrocarril)' },
+            { origen: 'EFE Quilicura (Ferrocarril)', destino: 'Los Libertadores' },
+            { origen: 'Los Libertadores', destino: 'Cardenal Caro' },
+            { origen: 'Cardenal Caro', destino: 'Vivaceta' },
+            { origen: 'Vivaceta', destino: 'Conchalí' },
+            { origen: 'Conchalí', destino: 'Plaza Chacabuco' },
+            { origen: 'Plaza Chacabuco', destino: 'Hospitales' },
+            { origen: 'Hospitales', destino: 'Puente Cal y Canto' },
+            { origen: 'Puente Cal y Canto', destino: 'Plaza de Armas' },
+            { origen: 'Plaza de Armas', destino: 'Universidad de Chile' },
+            { origen: 'Universidad de Chile', destino: 'Parque Almagro' },
+            { origen: 'Parque Almagro', destino: 'Matta' },
+            { origen: 'Matta', destino: 'Irarrázaval' },
+            { origen: 'Irarrázaval', destino: 'Monseñor Eyzaguirre' },
+            { origen: 'Monseñor Eyzaguirre', destino: 'Ñuñoa' },
+            { origen: 'Ñuñoa', destino: 'Chile España' },
+            { origen: 'Chile España', destino: 'Villa Frei' },
+            { origen: 'Villa Frei', destino: 'Plaza Egaña' },
+            { origen: 'Plaza Egaña', destino: 'Fernando Castillo Velasco' },
+            //Estaciondes de la Línea 4 del Metro de Santiago
+            { origen: 'Tobalaba', destino: 'Cristóbal Colón' },
+            { origen: 'Cristóbal Colón', destino: 'Francisco Bilbao' },
+            { origen: 'Francisco Bilbao', destino: 'Príncipe de Gales' },
+            { origen: 'Príncipe de Gales', destino: 'Simón Bolívar' },
+            { origen: 'Simón Bolívar', destino: 'Plaza Egaña' },
+            { origen: 'Plaza Egaña', destino: 'Los Orientales' },
+            { origen: 'Los Orientales', destino: 'Grecia' },
+            { origen: 'Grecia', destino: 'Los Presidentes' },
+            { origen: 'Los Presidentes', destino: 'Quilín' },
+            { origen: 'Quilín', destino: 'Las Torres' },
+            { origen: 'Las Torres', destino: 'Macul' },
+            { origen: 'Macul', destino: 'Vicuña Mackenna' },
+            { origen: 'Vicuña Mackenna', destino: 'Vicente Valdés' },
+            { origen: 'Vicente Valdés', destino: 'Rojas Magallanes' },
+            { origen: 'Rojas Magallanes', destino: 'Trinidad' },
+            { origen: 'Trinidad', destino: 'San José de la Estrella' },
+            { origen: 'San José de la Estrella', destino: 'Los Quillayes' },
+            { origen: 'Los Quillayes', destino: 'Elisa Correa' },
+            { origen: 'Elisa Correa', destino: 'Hospital Sótero del Río' },
+            { origen: 'Hospital Sótero del Río', destino: 'Protectora de la Infancia' },
+            { origen: 'Protectora de la Infancia', destino: 'Las Mercedes' },
+            { origen: 'Las Mercedes', destino: 'Plaza de Puente Alto' },
+            //Estaciondes de la Línea 4A del Metro de Santiago
+            { origen: 'Vicuña Mackenna', destino: 'Santa Julia' },
+            { origen: 'Santa Julia', destino: 'La Granja' },
+            { origen: 'La Granja', destino: 'Santa Rosa' },
+            { origen: 'Santa Rosa', destino: 'San Ramón' },
+            { origen: 'San Ramón', destino: 'La Cisterna' },
+            //Estaciondes de la Línea 5 del Metro de Santiago
+            { origen: 'Plaza de Maipú', destino: 'Santiago Bueras' },
+            { origen: 'Santiago Bueras', destino: 'Del Sol' },
+            { origen: 'Del Sol', destino: 'Monte Tabor' },
+            { origen: 'Monte Tabor', destino: 'Las Parcelas' },
+            { origen: 'Las Parcelas', destino: 'Laguna Sur' },
+            { origen: 'Laguna Sur', destino: 'Barrancas' },
+            { origen: 'Barrancas', destino: 'Pudahuel' },
+            { origen: 'Pudahuel', destino: 'San Pablo' },
+            { origen: 'San Pablo', destino: 'Lo Prado' },
+            { origen: 'Lo Prado', destino: 'Blanqueado' },
+            { origen: 'Blanqueado', destino: 'Gruta de Lourdes' },
+            { origen: 'Gruta de Lourdes', destino: 'Quinta Normal' },
+            { origen: 'Quinta Normal', destino: 'Cumming' },
+            { origen: 'Cumming', destino: 'Santa Ana' },
+            { origen: 'Santa Ana', destino: 'Plaza de Armas' },
+            { origen: 'Plaza de Armas', destino: 'Bellas Artes' },
+            { origen: 'Bellas Artes', destino: 'Baquedano' },
+            { origen: 'Baquedano', destino: 'Parque Bustamante' },
+            { origen: 'Parque Bustamante', destino: 'Santa Isabel' },
+            { origen: 'Santa Isabel', destino: 'Irarrázaval' },
+            { origen: 'Irarrázaval', destino: 'Ñuble' },
+            { origen: 'Ñuble', destino: 'Rodrigo de Araya' },
+            { origen: 'Rodrigo de Araya', destino: 'Carlos Valdovinos' },
+            { origen: 'Carlos Valdovinos', destino: 'Camino Agrícola' },
+            { origen: 'Camino Agrícola', destino: 'San Joaquín' },
+            { origen: 'San Joaquín', destino: 'Pedrero' },
+            { origen: 'Pedrero', destino: 'Mirador' },
+            { origen: 'Mirador', destino: 'Bellavista de la Florida' },
+            { origen: 'Bellavista de la Florida', destino: 'Vicente Valdés' },
+             //Estaciondes de la Línea 6 del Metro de Santiago
+             { origen: 'Cerrillos', destino: 'Lo Valledor' },
+            { origen: 'Lo Valledor', destino: 'Presidente Pedro Aguirre Cerda' },
+            { origen: 'Presidente Pedro Aguirre Cerda', destino: 'Franklin' },
+            { origen: 'Franklin', destino: 'Biobío' },
+            { origen: 'Biobío', destino: 'Ñuble' },
+            { origen: 'Ñuble', destino: 'Estadio Nacional' },
+            { origen: 'Estadio Nacional', destino: 'Ñuñoa' },
+            { origen: 'Ñuñoa', destino: 'Inés de Suárez' },
+            { origen: 'Inés de Suárez', destino: 'Los Leones' },
+        ];
     
         var markers = [];
-    
+        var routeLine = null;  // Variable para almacenar la polilínea
+
         // Añadir marcadores al mapa
         function addMarkers() {
-            // Borrar todos los marcadores actuales
             markers.forEach(function(marker) {
                 map.removeLayer(marker);
             });
             markers = [];
-    
+
             for (var station in stations) {
                 var marker = L.marker(stations[station]).addTo(map)
                     .bindPopup(station);
                 markers.push(marker);
             }
         }
-    
+
         addMarkers();
-    
         // Función para calcular la ruta
         function calculateRoute() {
-            var origin = document.getElementById('origin').value;
-            var destination = document.getElementById('destination').value;
-            
-            if (stations[origin] && stations[destination]) {                
-                // Aquí implementas la lógica para encontrar la mejor ruta (ejemplo simplificado)
-                var routeStations = getRouteStations(origin, destination);
-    
-                // Limpiar el mapa y mostrar solo las estaciones de la ruta
-                clearMap();
-                showRoute(routeStations);
-            } else {
-                alert('Por favor ingrese estaciones válidas');
+            const origin = document.getElementById("origin").value.trim();
+            const destination = document.getElementById("destination").value.trim();
+
+            if (!stations[origin] || !stations[destination]) {
+                alert("Por favor, introduce estaciones válidas.");
+                return;
             }
+
+            const route = dijkstra(conexiones, origin, destination);
+            if (route.length === 0) {
+                alert("No se encontró una ruta entre las estaciones indicadas.");
+                return;
+            }
+
+            // Mostrar la ruta en el mapa
+            drawRouteOnMap(route);
         }
+
+        // Función que implementa el algoritmo de Dijkstra
+        function dijkstra(connections, start, end) {
+            const graph = {};
+            connections.forEach(conn => {
+                if (!graph[conn.origen]) graph[conn.origen] = [];
+                graph[conn.origen].push(conn.destino);
+                
+                // Si es una conexión bidireccional
+                if (!graph[conn.destino]) graph[conn.destino] = [];
+                graph[conn.destino].push(conn.origen);
+            });
+
+            const distances = {};
+            const visited = {};
+            const previous = {};
+            const queue = [];
+
+            for (let station in graph) {
+                distances[station] = Infinity;
+                visited[station] = false;
+                previous[station] = null;
+            }
+            
+            distances[start] = 0;
+            queue.push(start);
+
+            while (queue.length) {
+                const current = queue.shift();
+
+                if (visited[current]) continue;
+                visited[current] = true;
+
+                if (current === end) break;
+
+                graph[current].forEach(neighbor => {
+                    if (!visited[neighbor]) {
+                        const distance = distances[current] + 1; // Suponiendo un peso de 1 por cada conexión
+                        if (distance < distances[neighbor]) {
+                            distances[neighbor] = distance;
+                            previous[neighbor] = current;
+                            queue.push(neighbor);
+                        }
+                    }
+                });
+            }
+
+            // Reconstruir la ruta
+            const path = [];
+            for (let at = end; at !== null; at = previous[at]) {
+                path.push(at);
+            }
+            path.reverse();
+            return path.length > 1 ? path : [];
+        }
+
+        // Función para dibujar la ruta en el mapa
+        function drawRouteOnMap(route) {
+            // Limpiar rutas anteriores
+            map.eachLayer(layer => {
+                if (layer instanceof L.Polyline) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            const latLngs = route.map(station => {
+                return stations[station];
+            });
+
+            const polyline = L.polyline(latLngs, { color: 'blue' }).addTo(map);
+            map.fitBounds(polyline.getBounds());
+
+            // Añadir marcadores para las estaciones
+            route.forEach(station => {
+                L.marker(stations[station]).addTo(map)
+                    .bindPopup(station)
+                    .openPopup();
+            });
+        }
+
     
         // Función para limpiar el mapa de marcadores
         function clearMap() {
@@ -261,21 +492,29 @@
                 map.removeLayer(marker);
             });
             markers = [];
+            if (routeLine) {
+                map.removeLayer(routeLine);
+            }
         }
     
         // Función para mostrar la ruta en el mapa
         function showRoute(routeStations) {
+            var routeCoordinates = [];
+
             routeStations.forEach(function(stationName) {
                 var marker = L.marker(stations[stationName]).addTo(map)
                     .bindPopup(stationName);
                 markers.push(marker);
+                routeCoordinates.push(stations[stationName]);
             });
+
+            // Dibujar la polilínea de la ruta
+            routeLine = L.polyline(routeCoordinates, {color: 'blue', weight: 4}).addTo(map);
+            map.fitBounds(routeLine.getBounds());
         }
-    
+
         // Función simplificada para obtener las estaciones entre origen y destino
         function getRouteStations(origin, destination) {
-            // Puedes implementar un algoritmo como Dijkstra o A* aquí.
-            // Este ejemplo solo devuelve un subconjunto de estaciones de forma manual para ilustración.
             var allStations = Object.keys(stations);
             var originIndex = allStations.indexOf(origin);
             var destinationIndex = allStations.indexOf(destination);
